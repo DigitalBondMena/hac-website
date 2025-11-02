@@ -34,7 +34,6 @@ import { HomeService } from '../../res/home.service';
     CarouselModule,
     CustomTranslatePipe,
     ImageUrlDirective,
-    HeroSkeletonComponent,
   ],
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.css',
@@ -171,6 +170,8 @@ export class HeroComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscription.add(
       this.homeService.getHomeData().subscribe({
         next: (data: any) => {
+          console.log(data);
+          
           this.heroSection = data.slider;
         },
         error: (error: unknown) => {

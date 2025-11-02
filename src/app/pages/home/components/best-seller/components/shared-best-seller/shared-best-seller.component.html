@@ -141,7 +141,7 @@
           class="w-full h-full"
           [appImageUrl]="productData.main_image"
           [imageEndpoint]="'uploads/products'"
-          alt="product image"
+          [alt]="productData | customTranslate : 'name'"
         />
       </figure>
     </a>

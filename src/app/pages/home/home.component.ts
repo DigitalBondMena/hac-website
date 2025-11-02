@@ -138,6 +138,7 @@ export class HomeComponent implements OnInit {
 
   constructor() {
     effect(() => {
+      console.log(this.sliders());
       const data = this.homeDataSignal();
       if (data && !this.hasInitialData) {
         console.log('Home data updated in signal');

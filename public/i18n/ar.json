@@ -583,7 +583,8 @@
       },
       "your-msg": "رسالتك"
     },
-    "heading": "اتصل بنا"
+    "heading": "اتصل بنا",
+    "contact-image-alt":"اتصل بنا"
   },
   "deleted-address": "مسح العنوان",
   "follow_your profile and register your data": "profile.header.subtitle",

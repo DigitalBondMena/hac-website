@@ -26,8 +26,8 @@ export class ImageUrlDirective {
     if (this._imageName) {
       this.src = this._imageService.getImageUrl(this._imageName);
     } else {
-      this.src =
-        'https://digitalbondmena.com/mesoshop/uploads/about/1744811586d5JAxZe3CX.webp';
+      // this.src =
+      //   'https://digitalbondmena.com/mesoshop/uploads/about/1744811586d5JAxZe3CX.webp';
     }
   }
 }

@@ -588,7 +588,8 @@
       },
       "your-msg": "Your Message"
     },
-    "heading": "Contact Us"
+    "heading": "Contact Us",
+    "contact-image-alt":"contact us"
   },
   "deleted-address": "delete address",
   "footer": {

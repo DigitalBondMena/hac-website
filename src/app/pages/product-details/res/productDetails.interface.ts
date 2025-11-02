@@ -14,6 +14,8 @@ export interface IProduct {
   en_description?: string;
   ar_description?: string;
   price?: string;
+  ar_script:string | null;
+  en_script:string | null;
   sale_price: string;
   price_after_sale: string;
   stock_status: boolean;

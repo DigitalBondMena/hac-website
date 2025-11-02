@@ -24,6 +24,7 @@ import {
   OnDestroy,
   OnInit,
   PLATFORM_ID,
+  Renderer2,
   runInInjectionContext,
   signal,
   ViewChild,
@@ -201,6 +202,7 @@ export class ProductDetailsComponent
 
   private platformId = inject(PLATFORM_ID);
   private document = inject(DOCUMENT);
+  private renderer = inject(Renderer2)
 
   private isBrowser = isPlatformBrowser(this.platformId);
 
@@ -1408,10 +1410,19 @@ export class ProductDetailsComponent
   /**
    * Update meta tags for SEO and social sharing
    */
+  appendDynamicScript(code: string | null) {
+    if(code) {
+      const script = this.renderer.createElement('script');
+      script.type = 'text/javascript';
+      script.text = code;
+      this.renderer.appendChild(this.document.body, script);
+    }
+  }
   private handleMeta(product: IProduct): void {
     if (!product) return;
-
     const currentLang = this._translateService.currentLang || 'ar';
+    const scriptTag = currentLang === 'ar' ? product.ar_script : product.en_script;
+    this.appendDynamicScript(scriptTag);
     const title =
       currentLang === 'ar' ? product.ar_meta_Title : product.en_meta_Title;
     const description =

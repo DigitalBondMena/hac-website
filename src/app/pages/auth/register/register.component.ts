@@ -22,7 +22,6 @@ import { ArticlesHeaderComponent } from '../../articles/components/articles-head
     RouterLink,
     RouterOutlet,
     RouterLinkActive,
-    NgClass,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',

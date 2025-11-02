@@ -6,7 +6,7 @@ Disallow: /*/register
 Disallow: /*/profile
 Disallow: /cart/
 Disallow: /checkout/
-Disallow: /search/
+Disallow: *?*
 Disallow: /wishlist/
 Disallow: /user/
 

@@ -346,8 +346,9 @@ private addSchema(): void {
   "@type": "PublicHealth",
   "name": "Hac Cosmetics",
   "image": "https://haccosmetics.com/images/navbar/2.webp",
-  "@id": "",
-  "url": "https://haccosmetics.com/ar",
+  "@id": "https://haccosmetics.com/en#brand", // 
+  "url": "https://haccosmetics.com/en",
+  "inLanguage": "en", // 
   "telephone": "00966545372774",
   "priceRange": "400 SR",
   "address": {
@@ -379,7 +380,7 @@ private addSchema(): void {
   "sameAs": [
     "https://www.facebook.com/people/HAC/61573515937163/",
     "https://www.instagram.com/hac.cosmeceuticals/",
-    "https://haccosmetics.com/en"
+    "https://haccosmetics.com/ar" 
   ] 
     }
   }
@@ -387,16 +388,17 @@ private addSchema(): void {
     return {
       "@context": "https://schema.org",
   "@type": "PublicHealth",
-  "name": "Hac Cosmetics",
+  "name": "هاك للمستحضرات التجميلية", // 
   "image": "https://haccosmetics.com/images/navbar/2.webp",
-  "@id": "",
+  "@id": "https://haccosmetics.com/ar#brand", // 
   "url": "https://haccosmetics.com/ar",
+  "inLanguage": "ar", // 
   "telephone": "00966545372774",
-  "priceRange": "400 SR",
+  "priceRange": "400 ر.س", // 
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Riyadh Sulaymaniyah RHOB6847, 6847 Al Olaya, 2567, Al Olaya",
-    "addressLocality": "Riyadh",
+    "streetAddress": "الرياض السليمانية RHOB6847، 6847 العليا، 2567، العليا", // 
+    "addressLocality": "الرياض", // 
     "postalCode": "00966",
     "addressCountry": "SA"
   },
@@ -408,13 +410,13 @@ private addSchema(): void {
   "openingHoursSpecification": {
     "@type": "OpeningHoursSpecification",
     "dayOfWeek": [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday"
+      "الاثنين", // 
+      "الثلاثاء",
+      "الأربعاء",
+      "الخميس",
+      "الجمعة",
+      "السبت",
+      "الأحد"
     ],
     "opens": "00:00",
     "closes": "23:59"
@@ -422,8 +424,8 @@ private addSchema(): void {
   "sameAs": [
     "https://www.facebook.com/people/HAC/61573515937163/",
     "https://www.instagram.com/hac.cosmeceuticals/",
-    "https://haccosmetics.com/en"
-  ] 
+    "https://haccosmetics.com/en" 
+  ]
     }
   }
   private updateAlternateLinks(currentUrl: string, alternateUrl: string): void {

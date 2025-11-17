@@ -35,8 +35,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       routes,
       withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
-      withViewTransitions(),
-      withHashLocation()
+      withViewTransitions()
     ),
     provideClientHydration(withEventReplay()),
     importProvidersFrom(

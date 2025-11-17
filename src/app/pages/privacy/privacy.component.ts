@@ -1,12 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { SafeHtmlComponent } from '@core/safe-html/safe-html.component';
 import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-privacy',
-  imports: [TranslateModule, SafeHtmlComponent],
+  imports: [TranslateModule],
   templateUrl: './privacy.component.html',
   styleUrl: './privacy.component.css',
 })

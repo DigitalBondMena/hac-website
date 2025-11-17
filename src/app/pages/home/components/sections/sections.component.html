@@ -1,4 +1,4 @@
-@if (staticCategories.length === 0) {
+@if (categories.length === 0) {
 <app-categories-skeleton></app-categories-skeleton>
 } @else {
 <section class="text-center">
@@ -28,17 +28,18 @@
     <div
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center"
     >
-      @for (item of staticCategories; track item.id) {
+      @for (item of categories; track item.id) {
 
       <a
         class="group relative rounded-xl overflow-hidden transition-all duration-300 block"
         [routerLink]="['/', currentLang, 'shopping']"
-        [queryParams]="{ subcategoryId: item.subcategoryId }"
+        [queryParams]="{ subcategoryId: item.id }"
       >
         <figure class="overflow-hidden mb-0 rounded-xl aspect-[4/3]">
           <img
+            [appImageUrl]="item.image || ''"
+            [imageEndpoint]="''"
             loading="lazy"
-            [src]="item.imgPath"
             alt="{{
               currentLang === 'en' ? item.en_name : item.ar_name
             }} shopping category"

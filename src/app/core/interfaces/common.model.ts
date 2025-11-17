@@ -21,6 +21,7 @@ export interface Category {
 }
 export interface ICategory extends Category {
   subcategories: ISubcategory[];
+  image:string
 }
 
 export interface ISubcategory {
@@ -34,4 +35,5 @@ export interface ISubcategory {
   order_view: number;
   created_at: string;
   updated_at: string;
+  image:string
 }

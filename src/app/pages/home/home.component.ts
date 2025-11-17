@@ -125,7 +125,7 @@ export class HomeComponent implements OnInit {
   sliders = computed(() => this.homeDataSignal()?.sliders || []);
   aboutUs = computed(() => this.homeDataSignal()?.aboutUs || ({} as AboutUs));
   counters = computed(() => this.homeDataSignal()?.counters || []);
-  categories = computed(() => this.homeDataSignal()?.categories || []);
+  subCategories = computed(() => this.homeDataSignal()?.subcategories || []);
   offers = computed(() => this.homeDataSignal()?.offers || []);
   latestProducts = computed(() => this.homeDataSignal()?.latestProducts || []);
   randomProducts = computed(() => this.homeDataSignal()?.randomProducts || []);
@@ -153,6 +153,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     this.loadHomeData();
   }
 

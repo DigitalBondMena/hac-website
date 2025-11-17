@@ -60,6 +60,8 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     const categoryData = this.categoriesSignal() as CategoryResponse | null;
 
     if (categoryData && Array.isArray(categoryData.categories)) {
+      console.log(categoryData.categories);
+      
       return categoryData.categories;
     }
 

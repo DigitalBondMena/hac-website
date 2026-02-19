@@ -84,3 +84,4 @@ export const API_CONFIG = {
     GET_BUSINESS_INFO: 'newsignup',
   },
 };
+export const isRamadanMonth = true;

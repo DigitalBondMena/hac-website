@@ -1,3 +1,4 @@
+import { isRamadanMonth } from './core/services/conf/api.config';
 import {
   AsyncPipe,
   CommonModule,
@@ -28,6 +29,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { LanguageService } from './core/services/lang/language.service';
 import { AlertComponent } from './shared/alert/alert.component';
 import { NotificationComponent } from './shared/components/notification/notification.component';
+import { RamadanLoaderComponent } from '@shared/components/ramadan-loader/ramadan-loader.component';
 
 @Component({
   selector: 'app-root',
@@ -43,6 +45,7 @@ import { NotificationComponent } from './shared/components/notification/notifica
     NgxSpinnerModule,
     RouterLink,
     AsyncPipe,
+    RamadanLoaderComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -61,7 +64,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   // Flag to ensure meta tags are only updated once per navigation
   private metaTagsUpdated = false;
-
+  isRamadanMonth = isRamadanMonth;
   currentLang$ = this._languageService.getLanguage();
 
   constructor(@Inject(DOCUMENT) private document: Document) {
@@ -99,7 +102,7 @@ export class AppComponent implements OnInit, OnDestroy {
             child = child.firstChild;
           }
           return child.snapshot.data;
-        })
+        }),
       )
       .subscribe((data) => {
         // Reset flag on navigation
@@ -233,20 +236,27 @@ export class AppComponent implements OnInit, OnDestroy {
   /**
    * Update SEO-related links (canonical, alternate, og:url)
    */
-private updateSEOLinks(): void {
-  const currentLang = this.translate.currentLang;
-  const currentPath = this.router.url.replace(/^\/(ar|en)/, '');
-  const canonicalUrl = `https://haccosmetics.com/${currentLang}${currentPath}`;
-  const alternateLang = currentLang === 'ar' ? 'en' : 'ar';
-  const alternateUrl = `https://haccosmetics.com/${alternateLang}${currentPath}`;
+  private updateSEOLinks(): void {
+    const currentLang = this.translate.currentLang;
+    const currentPath = this.router.url.replace(/^\/(ar|en)/, '');
+    const canonicalUrl = `https://haccosmetics.com/${currentLang}${currentPath}`;
+    const alternateLang = currentLang === 'ar' ? 'en' : 'ar';
+    const alternateUrl = `https://haccosmetics.com/${alternateLang}${currentPath}`;
     // Remove old canonical & alternate links first
     const head = this.document.head;
-    head.querySelectorAll(`link[rel='canonical'], link[rel='alternate']`).forEach(el => el.remove());
+    head
+      .querySelectorAll(`link[rel='canonical'], link[rel='alternate']`)
+      .forEach((el) => el.remove());
 
     // Insert canonical and alternate links at the top of <head>
     // Use existing helper methods that insert the links before other head nodes
     try {
-      this.insertAlternateFirst(currentLang, canonicalUrl, alternateLang, alternateUrl);
+      this.insertAlternateFirst(
+        currentLang,
+        canonicalUrl,
+        alternateLang,
+        alternateUrl,
+      );
       this.insertCanonicalFirst(canonicalUrl);
     } catch (e) {
       // Fallback: if helpers fail, append them (non-fatal)
@@ -270,51 +280,54 @@ private updateSEOLinks(): void {
 
     // og:url (important for social preview)
     this.meta.updateTag({ property: 'og:url', content: canonicalUrl });
-}
+  }
 
-private insertCanonicalFirst(url: string): void {
-  const head = this.document.head;
+  private insertCanonicalFirst(url: string): void {
+    const head = this.document.head;
 
-  head.querySelectorAll(`link[rel='canonical']`).forEach(el => el.remove());
+    head.querySelectorAll(`link[rel='canonical']`).forEach((el) => el.remove());
 
-  const canonical = this.document.createElement('link');
-  canonical.setAttribute('rel', 'canonical');
-  canonical.setAttribute('href', url);
+    const canonical = this.document.createElement('link');
+    canonical.setAttribute('rel', 'canonical');
+    canonical.setAttribute('href', url);
 
-  head.insertBefore(canonical, head.firstChild);
-}
-private insertAlternateFirst(currentLang: string, currentUrl: string, altLang: string, altUrl: string): void {
-  const head = this.document.head;
+    head.insertBefore(canonical, head.firstChild);
+  }
+  private insertAlternateFirst(
+    currentLang: string,
+    currentUrl: string,
+    altLang: string,
+    altUrl: string,
+  ): void {
+    const head = this.document.head;
 
-  head.querySelectorAll(`link[rel='alternate']`).forEach(el => el.remove());
+    head.querySelectorAll(`link[rel='alternate']`).forEach((el) => el.remove());
 
-  
+    // النسخة الحالية
+    const current = this.document.createElement('link');
+    current.setAttribute('rel', 'alternate');
+    current.setAttribute('hreflang', currentLang + '-SA');
+    current.setAttribute('href', currentUrl);
+    head.insertBefore(current, head.firstChild);
 
-  // النسخة الحالية
-  const current = this.document.createElement('link');
-  current.setAttribute('rel', 'alternate');
-  current.setAttribute('hreflang', currentLang + "-SA");
-  current.setAttribute('href', currentUrl);
-  head.insertBefore(current, head.firstChild);
+    // النسخة الأخرى
+    const other = this.document.createElement('link');
+    other.setAttribute('rel', 'alternate');
+    other.setAttribute('hreflang', altLang + '-SA');
+    other.setAttribute('href', altUrl);
+    head.insertBefore(other, head.firstChild);
 
-  // النسخة الأخرى
-  const other = this.document.createElement('link');
-  other.setAttribute('rel', 'alternate');
-  other.setAttribute('hreflang', altLang + "-SA");
-  other.setAttribute('href', altUrl);
-  head.insertBefore(other, head.firstChild);
-
-  // x-default → يشير للنسخة العربية (مرجعية البحث)
-  const xDefault = this.document.createElement('link');
-  xDefault.setAttribute('rel', 'alternate');
-  xDefault.setAttribute('hreflang', 'x-default');
-  xDefault.setAttribute('href', currentUrl.replace(/\/(ar|en)/, '/ar'));
-  head.insertBefore(xDefault, head.firstChild);
-}
+    // x-default → يشير للنسخة العربية (مرجعية البحث)
+    const xDefault = this.document.createElement('link');
+    xDefault.setAttribute('rel', 'alternate');
+    xDefault.setAttribute('hreflang', 'x-default');
+    xDefault.setAttribute('href', currentUrl.replace(/\/(ar|en)/, '/ar'));
+    head.insertBefore(xDefault, head.firstChild);
+  }
   private updateCanonicalLink(url: string): void {
     // Remove any existing canonical link
     const existingCanonical = this.document.querySelector(
-      'link[rel="canonical"]'
+      'link[rel="canonical"]',
     );
     if (existingCanonical) {
       existingCanonical.remove();
@@ -326,13 +339,16 @@ private insertAlternateFirst(currentLang: string, currentUrl: string, altLang: s
     canonical.setAttribute('href', url);
     this.document.head.prepend(canonical);
   }
-private addSchema(): void {
-    const old = this.document.querySelectorAll('script[type="application/ld+json"]');
-    old.forEach(o => o.remove());
+  private addSchema(): void {
+    const old = this.document.querySelectorAll(
+      'script[type="application/ld+json"]',
+    );
+    old.forEach((o) => o.remove());
 
     const currentLang = this.translate.currentLang || 'ar';
 
-    const schema = currentLang === 'ar' ? this.getArabicSchema() : this.getEnglishSchema();
+    const schema =
+      currentLang === 'ar' ? this.getArabicSchema() : this.getEnglishSchema();
 
     const script = this.renderer.createElement('script');
     script.type = 'application/ld+json';
@@ -340,98 +356,99 @@ private addSchema(): void {
 
     this.document.head.appendChild(script);
   }
-  private getEnglishSchema():Object {
+  private getEnglishSchema(): Object {
     return {
-      "@context": "https://schema.org",
-  "@type": "PublicHealth",
-  "name": "Hac Cosmetics",
-  "image": "https://haccosmetics.com/images/navbar/2.webp",
-  "@id": "https://haccosmetics.com/en#brand", // 
-  "url": "https://haccosmetics.com/en",
-  "inLanguage": "en", // 
-  "telephone": "00966545372774",
-  "priceRange": "400 SR",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "Riyadh Sulaymaniyah RHOB6847, 6847 Al Olaya, 2567, Al Olaya",
-    "addressLocality": "Riyadh",
-    "postalCode": "00966",
-    "addressCountry": "SA"
-  },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": 24.695087,
-    "longitude": 46.6806472
-  },
-  "openingHoursSpecification": {
-    "@type": "OpeningHoursSpecification",
-    "dayOfWeek": [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday"
-    ],
-    "opens": "00:00",
-    "closes": "23:59"
-  },
-  "sameAs": [
-    "https://www.facebook.com/people/HAC/61573515937163/",
-    "https://www.instagram.com/hac.cosmeceuticals/",
-    "https://haccosmetics.com/ar" 
-  ] 
-    }
+      '@context': 'https://schema.org',
+      '@type': 'PublicHealth',
+      name: 'Hac Cosmetics',
+      image: 'https://haccosmetics.com/images/navbar/2.webp',
+      '@id': 'https://haccosmetics.com/en#brand', //
+      url: 'https://haccosmetics.com/en',
+      inLanguage: 'en', //
+      telephone: '00966545372774',
+      priceRange: '400 SR',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress:
+          'Riyadh Sulaymaniyah RHOB6847, 6847 Al Olaya, 2567, Al Olaya',
+        addressLocality: 'Riyadh',
+        postalCode: '00966',
+        addressCountry: 'SA',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: 24.695087,
+        longitude: 46.6806472,
+      },
+      openingHoursSpecification: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: [
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday',
+          'Sunday',
+        ],
+        opens: '00:00',
+        closes: '23:59',
+      },
+      sameAs: [
+        'https://www.facebook.com/people/HAC/61573515937163/',
+        'https://www.instagram.com/hac.cosmeceuticals/',
+        'https://haccosmetics.com/ar',
+      ],
+    };
   }
-  private getArabicSchema():Object {
+  private getArabicSchema(): Object {
     return {
-      "@context": "https://schema.org",
-  "@type": "PublicHealth",
-  "name": "هاك للمستحضرات التجميلية", // 
-  "image": "https://haccosmetics.com/images/navbar/2.webp",
-  "@id": "https://haccosmetics.com/ar#brand", // 
-  "url": "https://haccosmetics.com/ar",
-  "inLanguage": "ar", // 
-  "telephone": "00966545372774",
-  "priceRange": "400 ر.س", // 
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "الرياض السليمانية RHOB6847، 6847 العليا، 2567، العليا", // 
-    "addressLocality": "الرياض", // 
-    "postalCode": "00966",
-    "addressCountry": "SA"
-  },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": 24.695087,
-    "longitude": 46.6806472
-  },
-  "openingHoursSpecification": {
-    "@type": "OpeningHoursSpecification",
-    "dayOfWeek": [
-      "الاثنين", // 
-      "الثلاثاء",
-      "الأربعاء",
-      "الخميس",
-      "الجمعة",
-      "السبت",
-      "الأحد"
-    ],
-    "opens": "00:00",
-    "closes": "23:59"
-  },
-  "sameAs": [
-    "https://www.facebook.com/people/HAC/61573515937163/",
-    "https://www.instagram.com/hac.cosmeceuticals/",
-    "https://haccosmetics.com/en" 
-  ]
-    }
+      '@context': 'https://schema.org',
+      '@type': 'PublicHealth',
+      name: 'هاك للمستحضرات التجميلية', //
+      image: 'https://haccosmetics.com/images/navbar/2.webp',
+      '@id': 'https://haccosmetics.com/ar#brand', //
+      url: 'https://haccosmetics.com/ar',
+      inLanguage: 'ar', //
+      telephone: '00966545372774',
+      priceRange: '400 ر.س', //
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'الرياض السليمانية RHOB6847، 6847 العليا، 2567، العليا', //
+        addressLocality: 'الرياض', //
+        postalCode: '00966',
+        addressCountry: 'SA',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: 24.695087,
+        longitude: 46.6806472,
+      },
+      openingHoursSpecification: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: [
+          'الاثنين', //
+          'الثلاثاء',
+          'الأربعاء',
+          'الخميس',
+          'الجمعة',
+          'السبت',
+          'الأحد',
+        ],
+        opens: '00:00',
+        closes: '23:59',
+      },
+      sameAs: [
+        'https://www.facebook.com/people/HAC/61573515937163/',
+        'https://www.instagram.com/hac.cosmeceuticals/',
+        'https://haccosmetics.com/en',
+      ],
+    };
   }
   private updateAlternateLinks(currentUrl: string, alternateUrl: string): void {
     // Remove existing alternate links
     const existingAlternates = this.document.querySelectorAll(
-      'link[rel="alternate"]'
+      'link[rel="alternate"]',
     );
     existingAlternates.forEach((link) => link.remove());
     const currentLang = this.translate.currentLang;
@@ -447,11 +464,9 @@ private addSchema(): void {
     // Add current language alternate
     const currentAlt = this.document.createElement('link');
     currentAlt.setAttribute('rel', 'alternate');
-    currentAlt.setAttribute('hreflang', currentLang+"-SA");
+    currentAlt.setAttribute('hreflang', currentLang + '-SA');
     currentAlt.setAttribute('href', currentUrl);
     this.document.head.prepend(currentAlt);
-
-    
 
     // Add x-default (pointing to Arabic version)
     const xDefault = this.document.createElement('link');

@@ -12,6 +12,7 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   const currentUrl = router.url;
 
   // Only show spinner if the current route matches these paths
+  console.log(currentUrl);
   if (
     currentUrl.includes('/checkout/checkout-address') ||
     currentUrl.includes('/checkout/payment') ||

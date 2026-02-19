@@ -1,3 +1,4 @@
+import { isRamadanMonth } from './../../core/services/conf/api.config';
 import {
   CommonModule,
   isPlatformBrowser,
@@ -56,6 +57,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
   isMenuOpen = false;
   isRtl = false;
   isLoading = true;
+  isRamadanMonth = isRamadanMonth;
 
   // Custom events for search state
   @Output() searchToggle = new EventEmitter<boolean>();
@@ -93,7 +95,10 @@ export class NavbarComponent implements OnDestroy, OnInit {
   @ViewChild('mobileProductsTrigger', { static: false })
   mobileProductsTrigger!: ElementRef<HTMLElement>;
 
-  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
+  constructor(
+    private renderer: Renderer2,
+    private elementRef: ElementRef,
+  ) {}
 
   ngOnInit(): void {
     // Set initial RTL state based on current language
@@ -162,7 +167,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
     } else {
       if (isPlatformBrowser(this.platformId)) {
         this.cartCountSignal.set(
-          JSON.parse(localStorage.getItem('orderDetails') || '0').length
+          JSON.parse(localStorage.getItem('orderDetails') || '0').length,
         );
       }
     }
@@ -172,9 +177,9 @@ export class NavbarComponent implements OnDestroy, OnInit {
     this._router.events
       .pipe(
         filter(
-          (event): event is NavigationEnd => event instanceof NavigationEnd
+          (event): event is NavigationEnd => event instanceof NavigationEnd,
         ),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((event: NavigationEnd) => {
         // Check if authenticated and load data accordingly
@@ -204,7 +209,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
    * @param keepOpen The dropdown to keep open (or 'none' to close all)
    */
   public closeAllDropdownsExcept(
-    keepOpen: 'menu' | 'search' | 'megaMenu' | 'mobileProducts' | 'none'
+    keepOpen: 'menu' | 'search' | 'megaMenu' | 'mobileProducts' | 'none',
   ): void {
     if (keepOpen !== 'menu') {
       this.showMenu = false;
@@ -228,7 +233,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
     // If mobile menu is open, close it with animation first
     if (this.isMenuOpen) {
       const menuElement = this.elementRef.nativeElement.querySelector(
-        '.mobile-menu-container .fixed'
+        '.mobile-menu-container .fixed',
       );
       if (menuElement) {
         menuElement.classList.remove('translate-x-0');
@@ -296,7 +301,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
         // Focus the first dropdown item when menu opens
         const firstDropdownItem = document.querySelector(
-          '#langDropdown li button'
+          '#langDropdown li button',
         ) as HTMLElement;
         if (firstDropdownItem) {
           firstDropdownItem.focus();
@@ -333,7 +338,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
     if (this.showSearch) {
       setTimeout(() => {
         const searchInput = document.getElementById(
-          'desktop-search'
+          'desktop-search',
         ) as HTMLInputElement;
         if (searchInput) {
           searchInput.focus();
@@ -406,7 +411,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
    */
   private handleOutsideClick(
     event: MouseEvent,
-    type: 'all' | 'language' | 'megamenu' | 'search'
+    type: 'all' | 'language' | 'megamenu' | 'search',
   ) {
     const target = event.target as HTMLElement;
 
@@ -492,7 +497,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
     setTimeout(() => {
       document.addEventListener(
         'click',
-        this.globalClickHandler as EventListener
+        this.globalClickHandler as EventListener,
       );
     }, 0);
   }
@@ -504,7 +509,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
     if (this.globalClickHandler) {
       document.removeEventListener(
         'click',
-        this.globalClickHandler as EventListener
+        this.globalClickHandler as EventListener,
       );
       this.globalClickHandler = null;
     }
@@ -553,7 +558,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
         // Focus the mobile search input after a short delay to allow the menu to render
         setTimeout(() => {
           const mobileSearchInput = document.getElementById(
-            'mobile-search'
+            'mobile-search',
           ) as HTMLInputElement;
           if (mobileSearchInput) {
             mobileSearchInput.focus();
@@ -564,7 +569,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
       // If menu is open and we're closing it
       // First trigger the animation by removing the transform class
       const menuElement = this.elementRef.nativeElement.querySelector(
-        '.mobile-menu-container .fixed'
+        '.mobile-menu-container .fixed',
       );
       if (menuElement) {
         menuElement.classList.remove('translate-x-0');
@@ -713,7 +718,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
       const currentElement = event.target as HTMLElement;
       const listItems = Array.from(
-        document.querySelectorAll('#langDropdown li button')
+        document.querySelectorAll('#langDropdown li button'),
       );
       const currentIndex = listItems.indexOf(currentElement);
 

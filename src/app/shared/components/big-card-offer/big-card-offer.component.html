@@ -36,7 +36,16 @@
   </div>
 
   <div class="hidden md:w-[60%] md:flex items-start md:items-end">
-    <figure class="h-full w-full">
+    <figure class="h-full w-full relative">
+      @if (isRamadanMonth) {
+        <div class="absolute top-0 left-0">
+          <img
+            src="/images/ramadan-theme/light-decore-1.png"
+            alt=""
+            role="presentation"
+          />
+        </div>
+      }
       <img
         loading="lazy"
         [appImageUrl]="imgPath"
@@ -45,21 +54,20 @@
         class="w-full h-full"
       />
     </figure>
-    @if (!mainColor ) {
-
-    <div
-      class="hidden xl:block image-rotate top-0 rtl:left-0 ltr:right-0 absolute z-1 rtl:-translate-x-1/2 ltr:translate-x-1/2 -translate-y-1/2"
-    >
-      <figure>
-        <img
-          loading="lazy"
-          class="w-[73px]"
-          src="/images/common/rotate.webp"
-          alt="Product rotation animation"
-          role="presentation"
-        />
-      </figure>
-    </div>
+    @if (!mainColor) {
+      <div
+        class="hidden xl:block image-rotate top-0 rtl:left-0 ltr:right-0 absolute z-1 rtl:-translate-x-1/2 ltr:translate-x-1/2 -translate-y-1/2"
+      >
+        <figure>
+          <img
+            loading="lazy"
+            class="w-[73px]"
+            src="/images/common/rotate.webp"
+            alt="Product rotation animation"
+            role="presentation"
+          />
+        </figure>
+      </div>
     }
   </div>
 </div>
